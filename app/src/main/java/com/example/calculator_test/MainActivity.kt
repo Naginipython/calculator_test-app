@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
 
         //Setting Variable
         var txt = ""
+        var ans = 0.0
+        var prevOp = 'a'
 
         //Numbered Buttons
         findViewById<Button>(R.id.btnZero).setOnClickListener {
@@ -57,24 +59,42 @@ class MainActivity : AppCompatActivity() {
 
         //Other Buttons
         findViewById<Button>(R.id.btnPlus).setOnClickListener {
-
+            ans = doMath(txt, ans, prevOp)
+            txt = ""
+            prevOp = '+'
+            updateText(ans.toString())
         }
         findViewById<Button>(R.id.btnMinus).setOnClickListener {
-
+            ans = doMath(txt, ans, prevOp)
+            txt = ""
+            prevOp = '-'
+            updateText(ans.toString())
         }
         findViewById<Button>(R.id.btnMult).setOnClickListener {
-
+            ans = doMath(txt, ans, prevOp)
+            txt = ""
+            prevOp = '*'
+            updateText(ans.toString())
         }
         findViewById<Button>(R.id.btnDivide).setOnClickListener {
-
+            ans = doMath(txt, ans, prevOp)
+            txt = ""
+            prevOp = '/'
+            updateText(ans.toString())
         }
         findViewById<Button>(R.id.btnClear).setOnClickListener {
-
+            txt = ""
+            ans = 0.0
+            prevOp = 'a'
+            updateText(txt)
         }
 
         //Equals Button
         findViewById<Button>(R.id.btnEqual).setOnClickListener {
-            //later
+            ans = doMath(txt, ans, prevOp)
+            txt = ""
+            prevOp = 'a'
+            updateText(ans.toString())
         }
 
     }
@@ -82,5 +102,17 @@ class MainActivity : AppCompatActivity() {
     private fun updateText(txt: String) {
         val txtArea = findViewById<TextView>(R.id.textView)
         txtArea.text = txt
+    }
+
+    private fun doMath(txt: String, ans: Double, op: Char): Double {
+        if (op != 'a') {
+            when (op) {
+                '+' -> return ans+txt.toDouble()
+                '-' -> return ans-txt.toDouble()
+                '*' -> return ans*txt.toDouble()
+                '/' -> return ans/txt.toDouble()
+            }
+        }
+        return txt.toDouble()
     }
 }
