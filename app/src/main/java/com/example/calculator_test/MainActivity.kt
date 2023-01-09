@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         var txt = ""
         var ans = 0.0
         var prevOp = 'a'
+        var clearCounter = 0
 
         //Numbered Buttons
         findViewById<Button>(R.id.btnZero).setOnClickListener {
@@ -57,44 +58,47 @@ class MainActivity : AppCompatActivity() {
             updateText(txt)
         }
 
+        fun resetOp(op: Char) {txt = ""; prevOp = op; clearCounter = 0; updateText(ans.toString())}
+
         //Other Buttons
         findViewById<Button>(R.id.btnPlus).setOnClickListener {
-            ans = doMath(txt, ans, prevOp)
-            txt = ""
-            prevOp = '+'
-            updateText(ans.toString())
+            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
+            resetOp('+')
         }
         findViewById<Button>(R.id.btnMinus).setOnClickListener {
-            ans = doMath(txt, ans, prevOp)
-            txt = ""
-            prevOp = '-'
-            updateText(ans.toString())
+            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
+            resetOp('-')
         }
         findViewById<Button>(R.id.btnMult).setOnClickListener {
-            ans = doMath(txt, ans, prevOp)
-            txt = ""
-            prevOp = '*'
-            updateText(ans.toString())
+            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
+            resetOp('*')
         }
         findViewById<Button>(R.id.btnDivide).setOnClickListener {
-            ans = doMath(txt, ans, prevOp)
-            txt = ""
-            prevOp = '/'
-            updateText(ans.toString())
-        }
-        findViewById<Button>(R.id.btnClear).setOnClickListener {
-            txt = ""
-            ans = 0.0
-            prevOp = 'a'
-            updateText(txt)
+            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
+            resetOp('/')
         }
 
         //Equals Button
         findViewById<Button>(R.id.btnEqual).setOnClickListener {
             ans = doMath(txt, ans, prevOp)
-            txt = ""
-            prevOp = 'a'
-            updateText(ans.toString())
+            resetOp('a')
+        }
+
+        findViewById<Button>(R.id.btnClear).setOnClickListener {
+            clearCounter++
+            when (clearCounter) {
+                1 -> {
+                    txt = ""
+                    updateText(ans.toString())
+                }
+                2 -> {
+                    txt = ""
+                    ans = 0.0
+                    prevOp = 'a'
+                    updateText(txt)
+                }
+            }
+
         }
 
     }
