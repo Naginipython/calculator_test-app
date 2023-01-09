@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,71 +17,77 @@ class MainActivity : AppCompatActivity() {
         var prevOp = 'a'
         var clearCounter = 0
 
-        //Numbered Buttons
-        findViewById<Button>(R.id.btnZero).setOnClickListener {
-            txt += "0"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnOne).setOnClickListener{
-            txt += "1"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnTwo).setOnClickListener{
-            txt += "2"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnThree).setOnClickListener {
-            txt += "3"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnFour).setOnClickListener {
-            txt += "4"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnFive).setOnClickListener {
-            txt += "5"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnSix).setOnClickListener {
-            txt += "6"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnSeven).setOnClickListener {
-            txt += "7"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnEight).setOnClickListener {
-            txt += "8"
-            updateText(txt)
-        }
-        findViewById<Button>(R.id.btnNine).setOnClickListener {
-            txt += "9"
-            updateText(txt)
+        //Initial text screen set
+        updateText(ans.toString())
+
+        //Update number function
+        fun updateNum(num: String) {
+            if (txt.length > (13*3)-1) {
+                Toast.makeText(applicationContext, "Number is too long", Toast.LENGTH_SHORT).show()
+            } else {
+                txt += num
+                updateText(txt)
+                clearCounter = 0
+            }
         }
 
-        fun resetOp(op: Char) {txt = ""; prevOp = op; clearCounter = 0; updateText(ans.toString())}
+        //Numbered Buttons
+        findViewById<Button>(R.id.btnZero).setOnClickListener {
+            updateNum("0")
+        }
+        findViewById<Button>(R.id.btnOne).setOnClickListener{
+            updateNum("1")
+        }
+        findViewById<Button>(R.id.btnTwo).setOnClickListener{
+            updateNum("2")
+        }
+        findViewById<Button>(R.id.btnThree).setOnClickListener {
+            updateNum("3")
+        }
+        findViewById<Button>(R.id.btnFour).setOnClickListener {
+            updateNum("4")
+        }
+        findViewById<Button>(R.id.btnFive).setOnClickListener {
+            updateNum("5")
+        }
+        findViewById<Button>(R.id.btnSix).setOnClickListener {
+            updateNum("6")
+        }
+        findViewById<Button>(R.id.btnSeven).setOnClickListener {
+            updateNum("7")
+        }
+        findViewById<Button>(R.id.btnEight).setOnClickListener {
+            updateNum("8")
+        }
+        findViewById<Button>(R.id.btnNine).setOnClickListener {
+            updateNum("9")
+        }
+
+        //function for common lines in ops and equals
+        fun resetOp(op: Char) {
+            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
+            txt = ""
+            prevOp = op
+            clearCounter = 0
+            updateText(ans.toString())
+        }
 
         //Other Buttons
         findViewById<Button>(R.id.btnPlus).setOnClickListener {
-            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
             resetOp('+')
         }
         findViewById<Button>(R.id.btnMinus).setOnClickListener {
-            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
             resetOp('-')
         }
         findViewById<Button>(R.id.btnMult).setOnClickListener {
-            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
             resetOp('*')
         }
         findViewById<Button>(R.id.btnDivide).setOnClickListener {
-            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
             resetOp('/')
         }
 
         //Equals Button
         findViewById<Button>(R.id.btnEqual).setOnClickListener {
-            ans = doMath(txt, ans, prevOp)
             resetOp('a')
         }
 
@@ -90,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                 1 -> {
                     txt = ""
                     updateText(ans.toString())
+                    Toast.makeText(applicationContext, "Click once more to clear everything", Toast.LENGTH_SHORT).show()
                 }
                 2 -> {
                     txt = ""
