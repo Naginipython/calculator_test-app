@@ -1,10 +1,12 @@
 package com.example.calculator_test
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.HorizontalScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,6 +116,13 @@ class MainActivity : AppCompatActivity() {
     private fun updateText(txt: String) {
         val txtArea = findViewById<TextView>(R.id.textView)
         txtArea.text = txt
+
+        //Moves scrollView to the right after update
+        var scrollView = findViewById<HorizontalScrollView>(R.id.scroll)
+        scrollView.postDelayed(
+            Runnable { scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
+            100L
+        )
     }
 
     private fun doMath(txt: String, ans: Double, op: Char): Double {

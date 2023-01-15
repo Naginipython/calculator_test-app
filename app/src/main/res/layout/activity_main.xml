@@ -7,15 +7,32 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
+    <HorizontalScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:text="TextView"
-        android:textSize="50sp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:lines="1"
+                android:text="TextView"
+                android:textSize="50sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <Button
         android:id="@+id/btnZero"
@@ -132,7 +149,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btnNine"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnSeven"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline3" />
 
     <Button
         android:id="@+id/btnNine"
@@ -145,7 +162,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btnDivide"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnEight"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline3" />
 
     <Button
         android:id="@+id/btnPlus"
@@ -197,7 +214,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnNine"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline3" />
 
     <Button
         android:id="@+id/btnEqual"
