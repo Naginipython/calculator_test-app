@@ -22,19 +22,26 @@ class MainActivity : AppCompatActivity() {
 
         //Textview number updater
         fun updateText(addTxt: String) {
+            //variable declarations
             val txtArea = findViewById<TextView>(R.id.textView)
             val lastChar = if(txt.isNotEmpty()) txt.substring(txt.length-1, txt.length) else ""
             var minusException = false
+            var prevAnswered = false
+
+            //quick operator checking function
+            fun isOp(str: String, hasMinus: Boolean): Boolean {
+                return str=="+"||str=="*"||str=="/"|| if(hasMinus)str=="-" else false
+            }
 
             //Check prev input. If its a operator (except minus) we replace
-            if (lastChar=="+"||lastChar=="*"||lastChar=="/")
-                if (addTxt=="+"||addTxt=="*"||addTxt=="/")
+            if (isOp(lastChar, false))
+                if (isOp(addTxt,false))
                     txt = txt.substring(0, txt.length-1)
 
             //Remove triple minus signs
             val secondLastChar = if(txt.length>2) txt.substring(txt.length-2, txt.length-1) else ""
             if (lastChar=="-")
-                if (secondLastChar=="+"||secondLastChar=="-"||secondLastChar=="*"||secondLastChar=="/")
+                if (isOp(secondLastChar, true))
                     when (addTxt) {
                         "+" -> { txt = txt.substring(0, txt.length-2) + "+-"; minusException = true }
                         "-" -> { txt = txt.substring(0, txt.length-2) + "--"; minusException = true }
@@ -42,11 +49,18 @@ class MainActivity : AppCompatActivity() {
                         "/" -> { txt = txt.substring(0, txt.length-2) + "/-"; minusException = true }
                     }
 
+            //If calc was prev answered, write over text unless its operators
+            if (txt == ans.toString() && !isOp(addTxt, true)) {
+                txt = addTxt; prevAnswered = true
+            }
+
             //Minus exception already changes text, so this isn't needed then
-            if (!minusException) {
+            if (!minusException && !prevAnswered) {
                 //Check if only number is 0
-                if ((txt.length == 1 && lastChar == "0") || txt == "0.0")
+                if (txt.length == 1 && lastChar == "0")
                     txt = addTxt
+                else if (txt.isEmpty()&&isOp(addTxt, true))
+                    txt = "0$addTxt"
                 else
                     txt += addTxt
             }
@@ -110,6 +124,16 @@ class MainActivity : AppCompatActivity() {
             updateText("/")
         }
 
+        findViewById<Button>(R.id.btnClear).setOnClickListener {
+            txt = ""
+            ans = 0.0
+            updateText("")
+        }
+
+        findViewById<Button>(R.id.btnPeriod).setOnClickListener {
+            updateText(".")
+        }
+
         //Equals Button
         findViewById<Button>(R.id.btnEqual).setOnClickListener {
             //setup for js math parser
@@ -118,24 +142,11 @@ class MainActivity : AppCompatActivity() {
             val scope: Scriptable = context.initStandardObjects()
             val result = context.evaluateString(scope, txt, "<cmd>", 1, null)
             txt = ""
+            ans = result.toString().toDouble()
             updateText(result.toString())
             Log.d("JS Math", "" + result)
         }
 
-        findViewById<Button>(R.id.btnClear).setOnClickListener {
-//            when (clearCounter) {
-//                1 -> {
-//                    txt = ""
-//                    updateText(ans.toString())
-//                    Toast.makeText(applicationContext, "Click once more to clear everything", Toast.LENGTH_SHORT).show()
-//                }
-//                2 -> {
-//                    txt = ""
-//                    ans = 0.0
-//                    updateText(txt)
-//                }
-//            }
 
-        }
     }
 }
