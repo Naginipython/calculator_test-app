@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("JS Math", "" + result)
                 txt = ""
                 ans = result.toString().toDouble()
-                findViewById<TextView>(R.id.textView).text = result.toString()
+                updateText(result.toString())
 
                 //Moves scrollView to the left after update
                 val scrollView = findViewById<HorizontalScrollView>(R.id.scroll)
