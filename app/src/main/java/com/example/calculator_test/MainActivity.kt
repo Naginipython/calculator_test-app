@@ -1,11 +1,14 @@
 package com.example.calculator_test
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+//rhino implementation
+import org.mozilla.javascript.Context
+import org.mozilla.javascript.Scriptable
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,124 +19,123 @@ class MainActivity : AppCompatActivity() {
         //Setting Variable
         var txt = ""
         var ans = 0.0
-        var prevOp = 'a'
-        var clearCounter = 0
+
+        //Textview number updater
+        fun updateText(addTxt: String) {
+            val txtArea = findViewById<TextView>(R.id.textView)
+            val lastChar = if(txt.isNotEmpty()) txt.substring(txt.length-1, txt.length) else ""
+            var minusException = false
+
+            //Check prev input. If its a operator (except minus) we replace
+            if (lastChar=="+"||lastChar=="*"||lastChar=="/")
+                if (addTxt=="+"||addTxt=="*"||addTxt=="/")
+                    txt = txt.substring(0, txt.length-1)
+
+            //Remove triple minus signs
+            val secondLastChar = if(txt.length>2) txt.substring(txt.length-2, txt.length-1) else ""
+            if (lastChar=="-")
+                if (secondLastChar=="+"||secondLastChar=="-"||secondLastChar=="*"||secondLastChar=="/")
+                    when (addTxt) {
+                        "+" -> { txt = txt.substring(0, txt.length-2) + "+-"; minusException = true }
+                        "-" -> { txt = txt.substring(0, txt.length-2) + "--"; minusException = true }
+                        "*" -> { txt = txt.substring(0, txt.length-2) + "*-"; minusException = true }
+                        "/" -> { txt = txt.substring(0, txt.length-2) + "/-"; minusException = true }
+                    }
+
+            //Minus exception already changes text, so this isn't needed then
+            if (!minusException) {
+                //Check if only number is 0
+                if ((txt.length == 1 && lastChar == "0") || txt == "0.0")
+                    txt = addTxt
+                else
+                    txt += addTxt
+            }
+
+            txtArea.text = txt
+
+            //Moves scrollView to the right after update
+            val scrollView = findViewById<HorizontalScrollView>(R.id.scroll)
+            scrollView.postDelayed(
+                Runnable { scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
+                100L
+            )
+        }
 
         //Initial text screen set
-        updateText(ans.toString())
-
-        //Update number function
-        fun updateNum(num: String) {
-            if (txt.length > (13*3)-1) {
-                Toast.makeText(applicationContext, "Number is too long", Toast.LENGTH_SHORT).show()
-            } else {
-                txt += num
-                updateText(txt)
-                clearCounter = 0
-            }
-        }
+        updateText("0")
 
         //Numbered Buttons
         findViewById<Button>(R.id.btnZero).setOnClickListener {
-            updateNum("0")
+            updateText("0")
         }
         findViewById<Button>(R.id.btnOne).setOnClickListener{
-            updateNum("1")
+            updateText("1")
         }
         findViewById<Button>(R.id.btnTwo).setOnClickListener{
-            updateNum("2")
+            updateText("2")
         }
         findViewById<Button>(R.id.btnThree).setOnClickListener {
-            updateNum("3")
+            updateText("3")
         }
         findViewById<Button>(R.id.btnFour).setOnClickListener {
-            updateNum("4")
+            updateText("4")
         }
         findViewById<Button>(R.id.btnFive).setOnClickListener {
-            updateNum("5")
+            updateText("5")
         }
         findViewById<Button>(R.id.btnSix).setOnClickListener {
-            updateNum("6")
+            updateText("6")
         }
         findViewById<Button>(R.id.btnSeven).setOnClickListener {
-            updateNum("7")
+            updateText("7")
         }
         findViewById<Button>(R.id.btnEight).setOnClickListener {
-            updateNum("8")
+            updateText("8")
         }
         findViewById<Button>(R.id.btnNine).setOnClickListener {
-            updateNum("9")
-        }
-
-        //function for common lines in ops and equals
-        fun resetOp(op: Char) {
-            if (txt.isNotEmpty()) ans = doMath(txt, ans, prevOp)
-            txt = ""
-            prevOp = op
-            clearCounter = 0
-            updateText(ans.toString())
+            updateText("9")
         }
 
         //Other Buttons
         findViewById<Button>(R.id.btnPlus).setOnClickListener {
-            resetOp('+')
+            updateText("+")
         }
         findViewById<Button>(R.id.btnMinus).setOnClickListener {
-            resetOp('-')
+            updateText("-")
         }
         findViewById<Button>(R.id.btnMult).setOnClickListener {
-            resetOp('*')
+            updateText("*")
         }
         findViewById<Button>(R.id.btnDivide).setOnClickListener {
-            resetOp('/')
+            updateText("/")
         }
 
         //Equals Button
         findViewById<Button>(R.id.btnEqual).setOnClickListener {
-            resetOp('a')
+            //setup for js math parser
+            val context = Context.enter()
+            context.optimizationLevel = -1
+            val scope: Scriptable = context.initStandardObjects()
+            val result = context.evaluateString(scope, txt, "<cmd>", 1, null)
+            txt = ""
+            updateText(result.toString())
+            Log.d("JS Math", "" + result)
         }
 
         findViewById<Button>(R.id.btnClear).setOnClickListener {
-            clearCounter++
-            when (clearCounter) {
-                1 -> {
-                    txt = ""
-                    updateText(ans.toString())
-                    Toast.makeText(applicationContext, "Click once more to clear everything", Toast.LENGTH_SHORT).show()
-                }
-                2 -> {
-                    txt = ""
-                    ans = 0.0
-                    prevOp = 'a'
-                    updateText(txt)
-                }
-            }
+//            when (clearCounter) {
+//                1 -> {
+//                    txt = ""
+//                    updateText(ans.toString())
+//                    Toast.makeText(applicationContext, "Click once more to clear everything", Toast.LENGTH_SHORT).show()
+//                }
+//                2 -> {
+//                    txt = ""
+//                    ans = 0.0
+//                    updateText(txt)
+//                }
+//            }
 
         }
-
-    }
-
-    private fun updateText(txt: String) {
-        val txtArea = findViewById<TextView>(R.id.textView)
-        txtArea.text = txt
-
-        //Moves scrollView to the right after update
-        var scrollView = findViewById<HorizontalScrollView>(R.id.scroll)
-        scrollView.postDelayed(
-            Runnable { scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
-            100L
-        )
-    }
-
-    private fun doMath(txt: String, ans: Double, op: Char): Double {
-        if (op != 'a') {
-            when (op) {
-                '+' -> return ans+txt.toDouble()
-                '-' -> return ans-txt.toDouble()
-                '*' -> return ans*txt.toDouble()
-                '/' -> return ans/txt.toDouble()
-            }
-        }
-        return txt.toDouble()
     }
 }
