@@ -59,9 +59,7 @@ class MainActivity : AppCompatActivity() {
             //Minus exception already changes text, so this isn't needed then
             if (!minusException && !prevAnswered) {
                 //Check if only number is 0
-                if (txt.length == 1 && lastChar == "0")
-                    txt = addTxt
-                else if (txt.isEmpty()&&isOp(addTxt, true))
+                if (txt.isEmpty()&&isOp(addTxt, true))
                     txt = "0$addTxt"
                 else
                     txt += addTxt
@@ -76,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Initial text screen set
-        updateText("0")
+        updateText("")
 
         //Numbered Buttons
         findViewById<Button>(R.id.btnZero).setOnClickListener {
