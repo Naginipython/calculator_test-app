@@ -5,9 +5,11 @@ import android.util.Log
 import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 //rhino implementation
 import org.mozilla.javascript.Context
+import org.mozilla.javascript.EcmaError
 import org.mozilla.javascript.Scriptable
 
 
@@ -127,9 +129,16 @@ class MainActivity : AppCompatActivity() {
             ans = 0.0
             updateText("")
         }
-
         findViewById<Button>(R.id.btnPeriod).setOnClickListener {
             updateText(".")
+        }
+
+        findViewById<Button>(R.id.btnLeftPara).setOnClickListener {
+            updateText("(")
+        }
+
+        findViewById<Button>(R.id.btnRightPara).setOnClickListener {
+            updateText(")")
         }
 
         findViewById<Button>(R.id.btnBack).setOnClickListener {
@@ -146,11 +155,15 @@ class MainActivity : AppCompatActivity() {
             val context = Context.enter()
             context.optimizationLevel = -1
             val scope: Scriptable = context.initStandardObjects()
-            val result = context.evaluateString(scope, txt, "<cmd>", 1, null)
-            txt = ""
-            ans = result.toString().toDouble()
-            updateText(result.toString())
-            Log.d("JS Math", "" + result)
+            try {
+                val result = context.evaluateString(scope, txt, "<cmd>", 1, null)
+                Log.d("JS Math", "" + result)
+                txt = ""
+                ans = result.toString().toDouble()
+                updateText(result.toString())
+            } catch (e: EcmaError) {
+                Toast.makeText(this, "Can't evaluate expression", Toast.LENGTH_SHORT).show()
+            }
         }
 
 
