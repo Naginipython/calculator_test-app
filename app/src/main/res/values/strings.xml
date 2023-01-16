@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">calculator_test</string>
+    <string name="deleteBtn">&lt;-</string>
 </resources>
