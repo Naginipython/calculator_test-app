@@ -69,10 +69,8 @@ class MainActivity : AppCompatActivity() {
 
             //Moves scrollView to the right after update
             val scrollView = findViewById<HorizontalScrollView>(R.id.scroll)
-            scrollView.postDelayed(
-                Runnable { scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },
-                100L
-            )
+            scrollView.postDelayed({
+                scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT) },100L)
         }
 
         //Initial text screen set
@@ -132,6 +130,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnPeriod).setOnClickListener {
             updateText(".")
+        }
+
+        findViewById<Button>(R.id.btnBack).setOnClickListener {
+            if (txt == ans.toString())
+                txt = ""
+            else
+                txt = if (txt.isNotEmpty()) txt.substring(0, txt.length-1) else ""
+            updateText("")
         }
 
         //Equals Button
