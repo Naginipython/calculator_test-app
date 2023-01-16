@@ -160,7 +160,12 @@ class MainActivity : AppCompatActivity() {
                 Log.d("JS Math", "" + result)
                 txt = ""
                 ans = result.toString().toDouble()
-                updateText(result.toString())
+                findViewById<TextView>(R.id.textView).text = result.toString()
+
+                //Moves scrollView to the left after update
+                val scrollView = findViewById<HorizontalScrollView>(R.id.scroll)
+                scrollView.postDelayed({
+                    scrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT) },100L)
             } catch (e: EcmaError) {
                 Toast.makeText(this, "Can't evaluate expression", Toast.LENGTH_SHORT).show()
             }
