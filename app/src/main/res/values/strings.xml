@@ -1,4 +1,27 @@
 <resources>
-    <string name="app_name">calculator_test</string>
+    <string name="app_name">its a calculator</string>
+    <string name="tvTempTxt">TextView</string>
+
     <string name="deleteBtn">&lt;-</string>
+    <string name="btnZero">0</string>
+    <string name="btnOne">1</string>
+    <string name="btnTwo">2</string>
+    <string name="btnThree">3</string>
+    <string name="btnFour">4</string>
+    <string name="btnFive">5</string>
+    <string name="btnSix">6</string>
+    <string name="btnSeven">7</string>
+    <string name="btnEight">8</string>
+    <string name="btnNine">9</string>
+    <string name="btnAC">AC</string>
+    <string name="btnPeriod">.</string>
+    <string name="btnAdd">+</string>
+    <string name="btnMinus">-</string>
+    <string name="btnMult">*</string>
+    <string name="btnDivide">/</string>
+    <string name="btnEqual">=</string>
+    <string name="btnLeftPara">(</string>
+    <string name="btnRightPara">)</string>
+
+    <string name="descBack">Back</string>
 </resources>
