@@ -2,10 +2,7 @@ package com.example.calculator_test
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.HorizontalScrollView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 //rhino implementation
 import org.mozilla.javascript.Context
@@ -139,11 +136,11 @@ class MainActivity : AppCompatActivity() {
             updateText(")")
         }
 
-        findViewById<Button>(R.id.btnBack).setOnClickListener {
-            if (txt == ans.toString())
-                txt = ""
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            txt = if (txt == ans.toString())
+                ""
             else
-                txt = if (txt.isNotEmpty()) txt.substring(0, txt.length-1) else ""
+                if (txt.isNotEmpty()) txt.substring(0, txt.length-1) else ""
             updateText("")
         }
 
@@ -165,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                 scrollView.postDelayed({
                     scrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT) },100L)
             } catch (e: EcmaError) {
-                Toast.makeText(this, "Can't evaluate expression", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Can't evaluate expression", Toast.LENGTH_LONG).show()
             }
         }
 
