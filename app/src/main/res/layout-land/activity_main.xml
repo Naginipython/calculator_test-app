@@ -20,6 +20,7 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:lines="1"
                 android:text="@string/tvTempTxt"
                 android:textSize="50sp"
