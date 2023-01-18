@@ -2,6 +2,7 @@ package com.example.calculator_test
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 //rhino implementation
@@ -162,7 +163,20 @@ class MainActivity : AppCompatActivity() {
                 scrollView.postDelayed({
                     scrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT) },100L)
             } catch (e: EcmaError) {
-                Toast.makeText(this, "Can't evaluate expression", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this, "Can't evaluate expression", Toast.LENGTH_LONG).show()
+
+                //Created a custom Toast to try it out
+                val inflater = layoutInflater
+                val layout: View = inflater.inflate(
+                    R.layout.activity_main_toast,
+                    null
+                )
+                val toast = Toast(this)
+                toast.apply {
+                    duration = Toast.LENGTH_LONG
+                    setView(layout)
+                    show()
+                }
             }
         }
 
