@@ -2,6 +2,9 @@ package com.example.calculator_test
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -120,6 +123,7 @@ class MainActivity : AppCompatActivity() {
             updateText("/")
         }
 
+        //Other buttons
         findViewById<Button>(R.id.btnClear).setOnClickListener {
             txt = ""
             ans = 0.0
@@ -179,7 +183,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_menu, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.itSettings -> {
+                TODO("Bring to a new activity")
+            }
+        }
+
+        return true
     }
 }
