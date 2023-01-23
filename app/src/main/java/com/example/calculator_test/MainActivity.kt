@@ -1,5 +1,6 @@
 package com.example.calculator_test
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextMenu
@@ -193,7 +194,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.itSettings -> {
-                TODO("Bring to a new activity")
+                Intent(this, SettingsActivity::class.java).also {
+                    startActivity(it)
+                }
             }
         }
 
