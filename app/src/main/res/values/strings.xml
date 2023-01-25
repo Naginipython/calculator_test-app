@@ -2,6 +2,7 @@
     <string name="app_name">its a calculator</string>
     <string name="tvTempTxt">TextView</string>
 
+<!--    Buttons   -->
     <string name="deleteBtn">&lt;-</string>
     <string name="btnZero">0</string>
     <string name="btnOne">1</string>
@@ -23,5 +24,8 @@
     <string name="btnLeftPara">(</string>
     <string name="btnRightPara">)</string>
 
+<!--    Descriptions   -->
     <string name="descBack">Back</string>
+    <string name="descHistory">History</string>
+    <string name="descSettings">Settings</string>
 </resources>
