@@ -3,12 +3,13 @@ package com.example.calculator_test
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 //rhino implementation
 import org.mozilla.javascript.Context
 import org.mozilla.javascript.EcmaError
@@ -16,6 +17,9 @@ import org.mozilla.javascript.Scriptable
 
 
 class MainActivity : AppCompatActivity() {
+    //Necessary for passing to next Activity (I think)
+    private var history = mutableListOf<Equation>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         //Setting Variable
         var txt = ""
         var ans = 0.0
+
+        history.addAll(recoverHistory())
+        Log.d("Current History:", history.toString())
 
         //Textview number updater
         fun updateText(addTxt: String) {
@@ -157,8 +164,17 @@ class MainActivity : AppCompatActivity() {
             context.optimizationLevel = -1
             val scope: Scriptable = context.initStandardObjects()
             try {
+                //Answer:
                 val result = context.evaluateString(scope, txt, "<cmd>", 1, null)
-                Log.d("JS Math", "" + result)
+                Log.d("JS Math", result.toString())
+
+                //Saving results:
+                val addToFront = mutableListOf<Equation>(Equation(txt, result.toString().toDouble()))
+                addToFront.addAll(recoverHistory())
+                history = addToFront
+                saveHistory(history)
+
+                //resetting:
                 txt = ""
                 ans = result.toString().toDouble()
                 updateText(result.toString())
@@ -185,7 +201,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    //verride functions
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_main_menu, menu)
         return true
@@ -193,13 +209,36 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.itSettings -> {
-                Intent(this, SettingsActivity::class.java).also {
-                    startActivity(it)
-                }
+            R.id.itHistory -> Intent(this, HistoryActivity::class.java).also {
+                it.putExtra("EXTRA_HISTORY", Gson().toJson(history))
+                startActivity(it)
+            }
+            R.id.itSettings -> Intent(this, SettingsActivity::class.java).also {
+                startActivity(it)
             }
         }
-
         return true
+    }
+
+    //My Functions
+    private fun saveHistory(history: List<Equation>) {
+        val save = applicationContext.getSharedPreferences("history", 0)
+        save.edit().also {
+            it.putString("historyString", Gson().toJson(history))
+            Log.d("Saved Data: ", history.toString())
+            it.apply()
+        }
+    }
+    private fun recoverHistory(): List<Equation> {
+        val save = applicationContext.getSharedPreferences("history", 0)
+        val json = save.getString("historyString", null)
+        return if (json != null) {
+            val type = object : TypeToken<MutableList<Equation>>() {}.type
+            val data = Gson().fromJson<List<Equation>>(json, type)
+            Log.d("Receieved Data: ", data.toString())
+            data
+        } else {
+            mutableListOf<Equation>()
+        }
     }
 }
